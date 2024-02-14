@@ -3,6 +3,7 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.uix.image import Image
 from kivy.core.window import Window
+from kivy.graphics import Line
 import random
 
 OBSTACLE_SIZE = (50, 50)
@@ -15,6 +16,7 @@ class CrossingRoadGame(Widget):
         self.obstacles = []
         Clock.schedule_interval(self.create_obstacle, OBSTACLE_INTERVAL)
         Clock.schedule_interval(self.update, 1/60)
+        self.create_borders()
         
     def create_obstacle(self,dod):
         obstacle1 = Image(source='', size=OBSTACLE_SIZE)
@@ -37,6 +39,11 @@ class CrossingRoadGame(Widget):
         obstacle3.initial_y = obstacle3.y
         self.add_widget(obstacle3)
         self.obstacles.append(obstacle3)
+
+    def create_borders(self):
+        with self.canvas:
+            for i in range(1, 3):
+                Line(points=[0, Window.height * i / 3, Window.width, Window.height * i / 3], width=2)
 
     def update(self,dod):
         for obstacle in self.obstacles:
