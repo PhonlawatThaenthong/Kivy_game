@@ -24,6 +24,20 @@ class CrossingRoadGame(Widget):
         self.add_widget(obstacle1)
         self.obstacles.append(obstacle1)
 
+        obstacle2 = Image(source='', size=OBSTACLE_SIZE)
+        obstacle2.x = Window.width * 0.5
+        obstacle2.y = Window.height * 0.5
+        obstacle2.initial_y = obstacle2.y
+        self.add_widget(obstacle2)
+        self.obstacles.append(obstacle2)
+
+        obstacle3 = Image(source='', size=OBSTACLE_SIZE)
+        obstacle3.x = Window.width * 0.8
+        obstacle3.y = Window.height * 0.8
+        obstacle3.initial_y = obstacle3.y
+        self.add_widget(obstacle3)
+        self.obstacles.append(obstacle3)
+
     def update(self,dod):
         for obstacle in self.obstacles:
             obstacle.x -= OBSTACLE_SPEED
