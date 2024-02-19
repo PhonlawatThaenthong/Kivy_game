@@ -69,6 +69,11 @@ class CrossingRoadGame(Widget):
     def _on_key_down(self, keyboard, keycode, text, modifiers):
         self.keysPressed.add(text)
 
+    def _on_key_up(self,keyboard,keycode):
+        text = keycode[1]
+        if text in self.keysPressed:
+            self.keysPressed.remove(text)
+
 
 class CrossingRoadApp(App):
     def build(self):
