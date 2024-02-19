@@ -61,6 +61,11 @@ class CrossingRoadGame(Widget):
                 obstacle.x = Window.width + random.randint(50, 200)
                 obstacle.y = obstacle.initial_y
 
+    def _on_keyboard_closed(self):
+        self.keyboard.unbind(on_key_down=self._on_key_down)
+        self.keyboard.unbind(on_key_up=self._on_key_up)
+        self.keyboard = None
+
 
 class CrossingRoadApp(App):
     def build(self):
