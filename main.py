@@ -5,6 +5,7 @@ from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.graphics import Line
 import random
+from kivy.graphics import Rectangle
 
 OBSTACLE_SIZE = (50, 50)
 OBSTACLE_SPEED = 5
@@ -17,6 +18,13 @@ class CrossingRoadGame(Widget):
         Clock.schedule_interval(self.create_obstacle, OBSTACLE_INTERVAL)
         Clock.schedule_interval(self.update, 1/60)
         self.create_borders()
+        self.keyboard = Window.request_keyboard(self._on_keyboard_closed, self)
+        self.keyboard.bind(on_key_down=self._on_key_down)
+        self.keyboard.bind(on_key_up=self._on_key_up)
+        with self.canvas:
+            self.player = Rectangle(source="", pos=(0, 0), size=(50, 50))
+        self.keysPressed =set()
+        Clock.schedule_interval(self.move_step,0)
         
     def create_obstacle(self,dod):
         obstacle1 = Image(source='', size=OBSTACLE_SIZE)
