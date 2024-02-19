@@ -74,6 +74,23 @@ class CrossingRoadGame(Widget):
         if text in self.keysPressed:
             self.keysPressed.remove(text)
 
+    def move_step(self,dt):
+        currentx = self.player.pos[0]
+        currenty = self.player.pos[1]
+
+        step_size = 200 * dt
+
+        if "w" in self.keysPressed:
+            currenty += step_size
+        if "s" in self.keysPressed:
+            currenty -= step_size
+        if "a" in self.keysPressed:
+            currentx -= step_size
+        if "d" in self.keysPressed:
+            currentx += step_size
+
+        self.player.pos = (currentx, currenty)
+
 
 class CrossingRoadApp(App):
     def build(self):
