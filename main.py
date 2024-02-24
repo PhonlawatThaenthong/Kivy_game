@@ -31,7 +31,12 @@ class CrossingRoadGame(Widget):
                                  pos=(Window.width / 2 - 50, Window.height / 2),
                                  color=(1, 0, 0, 1), opacity=0)
         self.add_widget(self.game_over_label)
-        
+
+        self.restart_button = Button(text="Restart", size=(200, 100),
+                                  pos=(Window.width / 2 - 100, Window.height / 2 - 100),
+                                  opacity=0)
+        self.restart_button.bind(on_press=self.restart_game)
+        self.add_widget(self.restart_button)
         
     def create_obstacle(self,dt):
         obstacle1 = Image(source='', size=OBSTACLE_SIZE)
@@ -88,12 +93,22 @@ class CrossingRoadGame(Widget):
 
     def show_game_over(self):
      self.game_over_label.opacity = 1
-     
+     self.restart_button.opacity = 1
      Clock.unschedule(self.create_obstacle)
      Clock.unschedule(self.update)
      Clock.unschedule(self.move_step)
 
-    
+    def restart_game(self, instance):
+        self.game_over_label.opacity = 0
+        self.restart_button.opacity = 0
+        Clock.schedule_interval(self.create_obstacle, OBSTACLE_INTERVAL)
+        Clock.schedule_interval(self.update, 1/60)
+        Clock.schedule_interval(self.move_step, 0) 
+        self.player.pos = (0, 0)
+
+        for obstacle in self.obstacles:
+            obstacle.x = Window.width + random.randint(50, 200)
+            obstacle.y = obstacle.initial_y
     
 
     def _on_keyboard_closed(self):
