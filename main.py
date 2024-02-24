@@ -3,9 +3,10 @@ from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.uix.image import Image
 from kivy.core.window import Window
-from kivy.graphics import Line
+from kivy.graphics import Line, Rectangle
 import random
-from kivy.graphics import Rectangle
+from kivy.uix.label import Label
+from kivy.uix.button import Button
 
 OBSTACLE_SIZE = (50, 50)
 OBSTACLE_SPEED = 5
@@ -26,7 +27,13 @@ class CrossingRoadGame(Widget):
         self.keysPressed =set()
         Clock.schedule_interval(self.move_step,0)
         
-    def create_obstacle(self,dod):
+        self.game_over_label = Label(text="Game Over", font_size=100,
+                                 pos=(Window.width / 2 - 50, Window.height / 2),
+                                 color=(1, 0, 0, 1), opacity=0)
+        self.add_widget(self.game_over_label)
+        
+        
+    def create_obstacle(self,dt):
         obstacle1 = Image(source='', size=OBSTACLE_SIZE)
         obstacle1.x = Window.width * 0.2
         obstacle1.y = Window.height * 0.2
@@ -53,13 +60,41 @@ class CrossingRoadGame(Widget):
             for i in range(1, 3):
                 Line(points=[0, Window.height * i / 3, Window.width, Window.height * i / 3], width=2)
 
-    def update(self,dod):
+    def update(self,dt):
         for obstacle in self.obstacles:
             obstacle.x -= OBSTACLE_SPEED
 
             if obstacle.x < -OBSTACLE_SIZE[0]:
                 obstacle.x = Window.width + random.randint(50, 200)
                 obstacle.y = obstacle.initial_y
+        self.check_collision()
+
+    def check_collision(self):
+     player_x, player_y = self.player.pos
+     player_width, player_height = self.player.size
+
+     for obstacle in self.obstacles:
+        obstacle_x, obstacle_y = obstacle.pos
+        obstacle_width, obstacle_height = obstacle.size
+
+        if (
+            player_x < obstacle_x + obstacle_width
+            and player_x + player_width > obstacle_x
+            and player_y < obstacle_y + obstacle_height
+            and player_y + player_height > obstacle_y
+        ):
+            self.show_game_over()
+
+
+    def show_game_over(self):
+     self.game_over_label.opacity = 1
+     
+     Clock.unschedule(self.create_obstacle)
+     Clock.unschedule(self.update)
+     Clock.unschedule(self.move_step)
+
+    
+    
 
     def _on_keyboard_closed(self):
         self.keyboard.unbind(on_key_down=self._on_key_down)
