@@ -40,7 +40,7 @@ class CrossingRoadGame(Widget):
 
         # Initialize player rectangle
         with self.canvas:
-            self.player = Rectangle(source="", pos=(0, 0), size=(50, 50))
+            self.player = Rectangle(source="", pos=(500, 50), size=(50, 50))
 
         # Create borders
         self.create_borders()
@@ -54,12 +54,19 @@ class CrossingRoadGame(Widget):
         # Create three obstacles
         for _ in range(3):
             obstacle = Image(source='', size=OBSTACLE_SIZE)
-            obstacle.x = Window.width * random.choice([0.2, 0.5, 0.8])
+            obstacle.x = Window.width
             obstacle.y = Window.height * random.choice([0.2, 0.5, 0.8])
             obstacle.initial_y = obstacle.y
             self.add_widget(obstacle)
             self.obstacles.append(obstacle)
+            # Schedule the removal of the obstacle after 5 seconds
+            Clock.schedule_once(lambda dt, obs=obstacle: self.remove_obstacle(obs),random.choice([5, 7, 10]))
 
+    def remove_obstacle(self, obstacle):
+        #remove obstacle when pass 5 or 7 or 10 second (random)
+        self.remove_widget(obstacle)
+        self.obstacles.remove(obstacle)
+    
     def create_borders(self):
         # Draw borders
         with self.canvas:
@@ -71,7 +78,7 @@ class CrossingRoadGame(Widget):
         for obstacle in self.obstacles:
             obstacle.x -= OBSTACLE_SPEED
             if obstacle.x < -OBSTACLE_SIZE[0]:
-                obstacle.x = Window.width + random.randint(50, 200)
+                obstacle.x = Window.width
                 obstacle.y = obstacle.initial_y
         self.check_collision()
 
@@ -107,7 +114,7 @@ class CrossingRoadGame(Widget):
         Clock.schedule_interval(self.create_obstacle, OBSTACLE_INTERVAL)
         Clock.schedule_interval(self.update, 1/60)
         Clock.schedule_interval(self.move_step, 0)
-        self.player.pos = (0, 0)
+        self.player.pos=(500, 50)
         for obstacle in self.obstacles:
             obstacle.x = Window.width + random.randint(50, 200)
             obstacle.y = obstacle.initial_y
