@@ -70,7 +70,7 @@ class CrossingRoadGame(Widget):
         # Create three obstacles
         for _ in range(3):
             obstacle = Image(source='', size=OBSTACLE_SIZE)
-            obstacle.x = Window.width * random.choice([0.25, 0.5, 0.75])
+            obstacle.x = Window.width * random.choice([0.25, 0.44, 0.63])
             obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
             obstacle.initial_y = obstacle.y
             self.add_widget(obstacle)
@@ -87,9 +87,9 @@ class CrossingRoadGame(Widget):
             # Draw starter border
             Line(points=[150, 0, 150, Window.height], width=border_width, color=border_color)
             # Draw obstacle border
-            Line(points=[400, 0, 400, Window.height], width=border_width, color=border_color)
-            Line(points=[650, 0, 650, Window.height], width=border_width, color=border_color)
-            Line(points=[900, 0, 900, Window.height], width=border_width, color=border_color)
+            Line(points=[300, 0, 300, Window.height], width=border_width, color=border_color)
+            Line(points=[450, 0, 450, Window.height], width=border_width, color=border_color)
+            Line(points=[600, 0, 600, Window.height], width=border_width, color=border_color)
 
             # Draw right border
             Line(points=[Window.width, 0, Window.width, Window.height], width=border_width, color=border_color)
@@ -105,7 +105,7 @@ class CrossingRoadGame(Widget):
         for obstacle in self.obstacles:
             obstacle.y += OBSTACLE_SPEED  # Move obstacles downwards
             if obstacle.y > Window.height:  # If obstacle goes out of the window
-                obstacle.x = Window.width * random.choice([0.25, 0.5, 0.75])  # Reset x position
+                obstacle.x = Window.width * random.choice([0.25, 0.44, 0.63])  # Reset x position
                 obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
                 obstacle.initial_y = obstacle.y
         self.check_collision()
