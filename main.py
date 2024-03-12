@@ -61,28 +61,28 @@ class CrossingRoadGame(Widget):
             self.obstacles.append(obstacle)
 
     def create_borders(self):
-    # Draw borders
-     with self.canvas:
-        border_width = 2
-        border_color = (0, 0, 1, 1)
+        # Draw borders
+        with self.canvas:
+            border_width = 2
+            border_color = (0, 0, 1, 1)
 
-        # Draw left border
-        Line(points=[0, 0, 0, Window.height], width=border_width, color=border_color)
-        # Draw starter border
-        Line(points=[150, 0, 150, Window.height], width=border_width, color=border_color)
-        # Draw obstacle border
-        Line(points=[400, 0, 400, Window.height], width=border_width, color=border_color)
-        Line(points=[650, 0, 650, Window.height], width=border_width, color=border_color)
-        Line(points=[900, 0, 900, Window.height], width=border_width, color=border_color)
+            # Draw left border
+            Line(points=[0, 0, 0, Window.height], width=border_width, color=border_color)
+            # Draw starter border
+            Line(points=[150, 0, 150, Window.height], width=border_width, color=border_color)
+            # Draw obstacle border
+            Line(points=[400, 0, 400, Window.height], width=border_width, color=border_color)
+            Line(points=[650, 0, 650, Window.height], width=border_width, color=border_color)
+            Line(points=[900, 0, 900, Window.height], width=border_width, color=border_color)
 
-        # Draw right border
-        Line(points=[Window.width, 0, Window.width, Window.height], width=border_width, color=border_color)
+            # Draw right border
+            Line(points=[Window.width, 0, Window.width, Window.height], width=border_width, color=border_color)
 
-        # Draw top border
-        Line(points=[0, Window.height, Window.width, Window.height], width=border_width, color=border_color)
+            # Draw top border
+            Line(points=[0, Window.height, Window.width, Window.height], width=border_width, color=border_color)
 
-        # Draw bottom border
-        Line(points=[0, 0, Window.width, 0], width=border_width, color=border_color)
+            # Draw bottom border
+            Line(points=[0, 0, Window.width, 0], width=border_width, color=border_color)
 
     def update(self, dt):
         # Update obstacle positions
@@ -182,6 +182,7 @@ class CrossingRoadGame(Widget):
 
 class CrossingRoadApp(App):
     def build(self):
+        Window.size = (1000, 600)  # Set desired screen size here
         return CrossingRoadGame()
 
 if __name__ == '__main__':
