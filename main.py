@@ -140,27 +140,39 @@ class CrossingRoadGame(Widget):
 
     def _on_key_down(self, keyboard, keycode, text, modifiers):
         # Handle key down event
-        self.keysPressed.add(text)
+        if keycode[1] in ('w', 'up'):
+            self.keysPressed.add('up')
+        elif keycode[1] in ('s', 'down'):
+            self.keysPressed.add('down')
+        elif keycode[1] in ('a', 'left'):
+            self.keysPressed.add('left')
+        elif keycode[1] in ('d', 'right'):
+            self.keysPressed.add('right')
 
     def _on_key_up(self, keyboard, keycode):
         # Handle key up event
-        text = keycode[1]
-        if text in self.keysPressed:
-            self.keysPressed.remove(text)
+        if keycode[1] in ('w', 'up'):
+            self.keysPressed.discard('up')
+        elif keycode[1] in ('s', 'down'):
+            self.keysPressed.discard('down')
+        elif keycode[1] in ('a', 'left'):
+            self.keysPressed.discard('left')
+        elif keycode[1] in ('d', 'right'):
+            self.keysPressed.discard('right')
 
     def move_step(self, dt):
         # Move player based on pressed keys
         currentx, currenty = self.player.pos
         step_size = 200 * dt
 
-        if "w" in self.keysPressed:
-            currenty += step_size  # Move up when 'w' is pressed
-        if "s" in self.keysPressed:
-            currenty -= step_size  # Move down when 's' is pressed
-        if "a" in self.keysPressed:
-            currentx -= step_size
-        if "d" in self.keysPressed:
-            currentx += step_size
+        if 'up' in self.keysPressed:
+            currenty += step_size  # Move up when 'up' or 'w' is pressed
+        if 'down' in self.keysPressed:
+            currenty -= step_size  # Move down when 'down' or 's' is pressed
+        if 'left' in self.keysPressed:
+            currentx -= step_size  # Move left when 'left' or 'a' is pressed
+        if 'right' in self.keysPressed:
+            currentx += step_size  # Move right when 'right' or 'd' is pressed
 
         # Limit player movement within window boundaries
         currentx = max(0, min(currentx, Window.width - self.player.size[0]))
