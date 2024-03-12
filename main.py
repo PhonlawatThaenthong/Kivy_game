@@ -1,3 +1,8 @@
+from kivy.config import Config
+
+# Disable resizable window
+Config.set('graphics', 'resizable', False)
+
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
@@ -12,10 +17,21 @@ import random
 OBSTACLE_SIZE = (50, 50)
 OBSTACLE_SPEED = 5
 OBSTACLE_INTERVAL = 1.5
+ASPECT_RATIO = 16 / 9  # Fixed aspect ratio
+
 
 class CrossingRoadGame(Widget):
     def __init__(self, **kwargs):
         super(CrossingRoadGame, self).__init__(**kwargs)
+        
+
+        # Calculate window size based on aspect ratio
+        screen_width = Window.width
+        screen_height = Window.height
+        if screen_width / screen_height > ASPECT_RATIO:
+            Window.size = (int(screen_height * ASPECT_RATIO), int(screen_height))
+        else:
+            Window.size = (int(screen_width), int(screen_width / ASPECT_RATIO))
 
         # Initialize obstacles and scheduling
         self.obstacles = []
@@ -182,7 +198,6 @@ class CrossingRoadGame(Widget):
 
 class CrossingRoadApp(App):
     def build(self):
-        Window.size = (1000, 600)  # Set desired screen size here
         return CrossingRoadGame()
 
 if __name__ == '__main__':
