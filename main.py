@@ -55,7 +55,7 @@ class CrossingRoadGame(Widget):
         for _ in range(3):
             obstacle = Image(source='', size=OBSTACLE_SIZE)
             obstacle.x = Window.width * random.choice([0.2, 0.5, 0.8])
-            obstacle.y = Window.height * random.choice([0.2, 0.5, 0.8])
+            obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
             obstacle.initial_y = obstacle.y
             self.add_widget(obstacle)
             self.obstacles.append(obstacle)
@@ -69,10 +69,11 @@ class CrossingRoadGame(Widget):
     def update(self, dt):
         # Update obstacle positions
         for obstacle in self.obstacles:
-            obstacle.x -= OBSTACLE_SPEED
-            if obstacle.x < -OBSTACLE_SIZE[0]:
-                obstacle.x = Window.width + random.randint(50, 200)
-                obstacle.y = obstacle.initial_y
+            obstacle.y += OBSTACLE_SPEED  # Move obstacles downwards
+            if obstacle.y > Window.height:  # If obstacle goes out of the window
+                obstacle.x = Window.width * random.choice([0.2, 0.5, 0.8])  # Reset x position
+                obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
+                obstacle.initial_y = obstacle.y
         self.check_collision()
 
     def check_collision(self):
@@ -110,7 +111,8 @@ class CrossingRoadGame(Widget):
         self.player.pos = (0, 0)
         for obstacle in self.obstacles:
             obstacle.x = Window.width + random.randint(50, 200)
-            obstacle.y = obstacle.initial_y
+            obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
+            obstacle.initial_y = obstacle.y
 
     def _on_keyboard_closed(self):
         # Unbind keyboard events
@@ -132,17 +134,22 @@ class CrossingRoadGame(Widget):
         # Move player based on pressed keys
         currentx, currenty = self.player.pos
         step_size = 200 * dt
-
+    
         if "w" in self.keysPressed:
-            currenty += step_size
+            currenty += step_size  # Move up when 'w' is pressed
         if "s" in self.keysPressed:
-            currenty -= step_size
+            currenty -= step_size  # Move down when 's' is pressed
         if "a" in self.keysPressed:
             currentx -= step_size
         if "d" in self.keysPressed:
             currentx += step_size
-
+    
+        # Limit player movement within window boundaries
+        currentx = max(0, min(currentx, Window.width - self.player.size[0]))
+        currenty = max(0, min(currenty, Window.height - self.player.size[1]))
+    
         self.player.pos = (currentx, currenty)
+    
 
 class CrossingRoadApp(App):
     def build(self):
