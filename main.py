@@ -40,7 +40,7 @@ class CrossingRoadGame(Widget):
 
         # Initialize player rectangle
         with self.canvas:
-            self.player = Rectangle(source="", pos=(0, 0), size=(50, 50))
+            self.player = Rectangle(source="", pos=(50,300), size=(50, 50))
 
         # Create borders
         self.create_borders()
@@ -54,24 +54,42 @@ class CrossingRoadGame(Widget):
         # Create three obstacles
         for _ in range(3):
             obstacle = Image(source='', size=OBSTACLE_SIZE)
-            obstacle.x = Window.width * random.choice([0.2, 0.5, 0.8])
+            obstacle.x = Window.width * random.choice([0.25, 0.5, 0.75])
             obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
             obstacle.initial_y = obstacle.y
             self.add_widget(obstacle)
             self.obstacles.append(obstacle)
 
     def create_borders(self):
-        # Draw borders
-        with self.canvas:
-            for i in range(1, 3):
-                Line(points=[0, Window.height * i / 3, Window.width, Window.height * i / 3], width=2)
+    # Draw borders
+     with self.canvas:
+        border_width = 2
+        border_color = (0, 0, 1, 1)
+
+        # Draw left border
+        Line(points=[0, 0, 0, Window.height], width=border_width, color=border_color)
+        # Draw starter border
+        Line(points=[150, 0, 150, Window.height], width=border_width, color=border_color)
+        # Draw obstacle border
+        Line(points=[400, 0, 400, Window.height], width=border_width, color=border_color)
+        Line(points=[650, 0, 650, Window.height], width=border_width, color=border_color)
+        Line(points=[900, 0, 900, Window.height], width=border_width, color=border_color)
+
+        # Draw right border
+        Line(points=[Window.width, 0, Window.width, Window.height], width=border_width, color=border_color)
+
+        # Draw top border
+        Line(points=[0, Window.height, Window.width, Window.height], width=border_width, color=border_color)
+
+        # Draw bottom border
+        Line(points=[0, 0, Window.width, 0], width=border_width, color=border_color)
 
     def update(self, dt):
         # Update obstacle positions
         for obstacle in self.obstacles:
             obstacle.y += OBSTACLE_SPEED  # Move obstacles downwards
             if obstacle.y > Window.height:  # If obstacle goes out of the window
-                obstacle.x = Window.width * random.choice([0.2, 0.5, 0.8])  # Reset x position
+                obstacle.x = Window.width * random.choice([0.25, 0.5, 0.75])  # Reset x position
                 obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
                 obstacle.initial_y = obstacle.y
         self.check_collision()
@@ -108,7 +126,7 @@ class CrossingRoadGame(Widget):
         Clock.schedule_interval(self.create_obstacle, OBSTACLE_INTERVAL)
         Clock.schedule_interval(self.update, 1/60)
         Clock.schedule_interval(self.move_step, 0)
-        self.player.pos = (0, 0)
+        self.player.pos = (50,300)
         for obstacle in self.obstacles:
             obstacle.x = Window.width + random.randint(50, 200)
             obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
