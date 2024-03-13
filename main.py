@@ -54,8 +54,12 @@ class CrossingRoadGame(Widget):
         self.add_widget(self.game_over_label)
 
         self.restart_button = Button(text="Restart", size=(200, 100),
-                                     pos=(Window.width / 2 - 100, Window.height / 2 - 100),
-                                     opacity=0)
+                                    pos=(Window.width / 2 - 100, Window.height / 2 - 100),
+                                    background_color=(0, 0.7, 0.3, 1),
+                                    font_size=24, color=(1, 1, 1, 1),
+                                    background_normal='', background_down='',
+                                    opacity=0, disabled=True)
+
         self.restart_button.bind(on_press=self.restart_game)
         self.add_widget(self.restart_button)
 
@@ -184,15 +188,17 @@ class CrossingRoadGame(Widget):
         # Show game over label and restart button
         self.game_over_label.opacity = 1
         self.restart_button.opacity = 1
+        self.restart_button.disabled = False  # Enable restart button
         Clock.unschedule(self.create_obstacle)
         Clock.unschedule(self.update)
         Clock.unschedule(self.move_step)
 
     def restart_game(self, instance):
-        # Show game over label and restart button
+        # Hide game over label and restart button
         self.game_over_label.opacity = 0
         self.restart_button.opacity = 0
-    
+        self.restart_button.disabled = True  # Disable restart button
+
         # Unscheduling old intervals
         Clock.unschedule(self.create_obstacle)
         Clock.unschedule(self.update)
