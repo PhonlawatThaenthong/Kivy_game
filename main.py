@@ -189,23 +189,43 @@ class CrossingRoadGame(Widget):
         Clock.unschedule(self.move_step)
 
     def restart_game(self, instance):
-        # Restart the game
+        # Show game over label and restart button
         self.game_over_label.opacity = 0
         self.restart_button.opacity = 0
+    
+        # Unscheduling old intervals
+        Clock.unschedule(self.create_obstacle)
+        Clock.unschedule(self.update)
+        Clock.unschedule(self.move_step)
+    
+        # Scheduling new intervals
         Clock.schedule_interval(self.create_obstacle, OBSTACLE_INTERVAL)
         Clock.schedule_interval(self.update, 1/60)
         Clock.schedule_interval(self.move_step, 0)
+    
+        # Remove existing coins
         for coin in self.coins:
             self.remove_widget(coin)
         self.coins = []
+    
+        # Reset coin-related variables
         self.coin_count = 0
         self.coin_spawned = True
+        self.coin2_spawned = False
+    
+        # Schedule the initial coin spawn
         Clock.schedule_interval(self.create_coin, 1)
-        self.player.pos = (50,200)
+    
+        # Reset player position
+        self.player.pos = (50, 200)
+    
+        # Reset obstacle positions
         for obstacle in self.obstacles:
             obstacle.x = Window.width + random.randint(50, 200)
             obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
             obstacle.initial_y = obstacle.y
+    
+
 
     def _on_keyboard_closed(self):
         # Unbind keyboard events
