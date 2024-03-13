@@ -29,6 +29,7 @@ class CrossingRoadGame(Widget):
         self.coin_count = 0
         Clock.schedule_interval(self.create_coin,1)
         self.coin_spawned = True
+        self.coin2_spawned = False
         # Calculate window size based on aspect ratio
         screen_width = Window.width
         screen_height = Window.height
@@ -81,16 +82,24 @@ class CrossingRoadGame(Widget):
             self.obstacles.append(obstacle)
 
     def create_coin(self, dt):
-        # Only spawn a new coin if it hasn't been spawned
+        # Only spawn when self.coin_spawned == True
         if self.coin_spawned:
-            coin = Image(source='', size=(30, 30))  # Replace 'coin_image.png' with the actual image file
-            coin.x = Window.width * random.choice([0.90])  # Random x position within window boundaries
-            coin.y = 200  # Spawn at the player's row
+            coin = Image(source='', size=(30, 30))
+            coin.x = Window.width * random.choice([0.90])#set x position of coin
+            coin.y = 200  #set y position of coin
             self.add_widget(coin)
             self.coins.append(coin)
-
-            # Set the flag to True to indicate that the coin has been spawned
             self.coin_spawned = False
+
+    def create_coin2(self, dt):
+        # Only spawn when self.coin2_spawned == True
+        if self.coin2_spawned:
+            coin = Image(source='', size=(30, 30))
+            coin.x = Window.width * random.choice([0.1])#set x position of coin
+            coin.y = 200  #set y position of coin
+            self.add_widget(coin)
+            self.coins.append(coin)
+            self.coin2_spawned = False
 
     def create_borders(self):
         # Draw borders
@@ -159,11 +168,17 @@ class CrossingRoadGame(Widget):
                 and player_y < coin_y + coin_height
                 and player_y + player_height > coin_y
             ):
-                self.coin_count += 1  # Increment coin count
+                self.coin_count += 1  # counting coin
                 print(f"Coins collected: {self.coin_count}")
                 self.coins.remove(coin)
                 self.remove_widget(coin)
-                self.coin_spawned = True
+                if coin.source == '' and not self.coin2_spawned and self.coin_count%2 != 0:
+                    self.coin2_spawned = True
+                    Clock.schedule_once(self.create_coin2, 1)
+                else:
+                    self.coin_spawned = True
+                    Clock.schedule_once(self.create_coin, 1)
+
 
     def show_game_over(self):
         # Show game over label and restart button
@@ -184,8 +199,9 @@ class CrossingRoadGame(Widget):
             self.remove_widget(coin)
         self.coins = []
         self.coin_count = 0
-        Clock.schedule_interval(self.create_coin, 10)
-        self.player.pos = (50,300)
+        self.coin_spawned = True
+        Clock.schedule_interval(self.create_coin, 1)
+        self.player.pos = (50,200)
         for obstacle in self.obstacles:
             obstacle.x = Window.width + random.randint(50, 200)
             obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
