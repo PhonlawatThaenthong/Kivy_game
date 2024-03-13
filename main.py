@@ -15,7 +15,7 @@ import random
 
 # Constants
 OBSTACLE_SIZE = (50, 50)
-OBSTACLE_SPEED = 5
+OBSTACLE_SPEED = 3
 OBSTACLE_INTERVAL = 1.5
 ASPECT_RATIO = 16 / 9  # Fixed aspect ratio
 
@@ -24,7 +24,11 @@ class CrossingRoadGame(Widget):
     def __init__(self, **kwargs):
         super(CrossingRoadGame, self).__init__(**kwargs)
         
-
+        # Initialize coins and scheduling
+        self.coins = []
+        self.coin_count = 0
+        Clock.schedule_interval(self.create_coin,1)
+        self.coin_spawned = True
         # Calculate window size based on aspect ratio
         screen_width = Window.width
         screen_height = Window.height
@@ -56,7 +60,7 @@ class CrossingRoadGame(Widget):
 
         # Initialize player rectangle
         with self.canvas:
-            self.player = Rectangle(source="", pos=(50,300), size=(50, 50))
+            self.player = Rectangle(source="", pos=(50,200), size=(50, 50))
 
         # Create borders
         self.create_borders()
@@ -75,6 +79,18 @@ class CrossingRoadGame(Widget):
             obstacle.initial_y = obstacle.y
             self.add_widget(obstacle)
             self.obstacles.append(obstacle)
+
+    def create_coin(self, dt):
+        # Only spawn a new coin if it hasn't been spawned
+        if self.coin_spawned:
+            coin = Image(source='', size=(30, 30))  # Replace 'coin_image.png' with the actual image file
+            coin.x = Window.width * random.choice([0.90])  # Random x position within window boundaries
+            coin.y = 200  # Spawn at the player's row
+            self.add_widget(coin)
+            self.coins.append(coin)
+
+            # Set the flag to True to indicate that the coin has been spawned
+            self.coin_spawned = False
 
     def create_borders(self):
         # Draw borders
@@ -109,6 +125,7 @@ class CrossingRoadGame(Widget):
                 obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
                 obstacle.initial_y = obstacle.y
         self.check_collision()
+        self.check_coin_collection()
 
     def check_collision(self):
         # Check collision between player and obstacles
@@ -127,6 +144,27 @@ class CrossingRoadGame(Widget):
             ):
                 self.show_game_over()
 
+    def check_coin_collection(self):
+        # Check if player collects a coin
+        player_x, player_y = self.player.pos
+        player_width, player_height = self.player.size
+
+        for coin in self.coins:
+            coin_x, coin_y = coin.pos
+            coin_width, coin_height = coin.size
+
+            if (
+                player_x < coin_x + coin_width
+                and player_x + player_width > coin_x
+                and player_y < coin_y + coin_height
+                and player_y + player_height > coin_y
+            ):
+                self.coin_count += 1  # Increment coin count
+                print(f"Coins collected: {self.coin_count}")
+                self.coins.remove(coin)
+                self.remove_widget(coin)
+                self.coin_spawned = True
+
     def show_game_over(self):
         # Show game over label and restart button
         self.game_over_label.opacity = 1
@@ -142,6 +180,11 @@ class CrossingRoadGame(Widget):
         Clock.schedule_interval(self.create_obstacle, OBSTACLE_INTERVAL)
         Clock.schedule_interval(self.update, 1/60)
         Clock.schedule_interval(self.move_step, 0)
+        for coin in self.coins:
+            self.remove_widget(coin)
+        self.coins = []
+        self.coin_count = 0
+        Clock.schedule_interval(self.create_coin, 10)
         self.player.pos = (50,300)
         for obstacle in self.obstacles:
             obstacle.x = Window.width + random.randint(50, 200)
