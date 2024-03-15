@@ -67,6 +67,12 @@ class CrossingRoadGame(Widget):
                                       color=(1, 1, 1, 1))
         self.add_widget(self.live_count_label)
 
+        #Score Modal
+        self.score_label = Label(text="Score: 0", font_size=20,
+                                 pos=(0,-20),
+                                 color=(1, 1, 1, 1))
+        self.add_widget(self.score_label)
+
         self.restart_button.bind(on_press=self.restart_game)
         self.add_widget(self.restart_button)
 
@@ -185,6 +191,7 @@ class CrossingRoadGame(Widget):
                 and player_y + player_height > coin_y
             ):
                 self.coin_count += 1  # counting coin
+                self.score_label.text = f"Score: {self.coin_count}"
                 print(f"Coins collected: {self.coin_count}")
                 self.coins.remove(coin)
                 self.remove_widget(coin)
@@ -230,6 +237,7 @@ class CrossingRoadGame(Widget):
         self.live_count_label.text = f"Lives: {self.live_count}"
         # Reset coin-related variables
         self.coin_count = 0
+        self.score_label.text = f"Score: {self.coin_count}"
         self.coin_spawned = True
         self.coin2_spawned = False
     
