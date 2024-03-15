@@ -27,6 +27,7 @@ class CrossingRoadGame(Widget):
         # Initialize coins and scheduling
         self.coins = []
         self.coin_count = 0
+        self.live_count = 3
         Clock.schedule_interval(self.create_coin,1)
         self.coin_spawned = True
         self.coin2_spawned = False
@@ -59,6 +60,12 @@ class CrossingRoadGame(Widget):
                                     font_size=24, color=(1, 1, 1, 1),
                                     background_normal='', background_down='',
                                     opacity=0, disabled=True)
+        
+        #Live Modal
+        self.live_count_label = Label(text="Lives: 3", font_size=20,
+                                      pos=(0,0),
+                                      color=(1, 1, 1, 1))
+        self.add_widget(self.live_count_label)
 
         self.restart_button.bind(on_press=self.restart_game)
         self.add_widget(self.restart_button)
@@ -155,7 +162,12 @@ class CrossingRoadGame(Widget):
                 and player_y < obstacle_y + obstacle_height
                 and player_y + player_height > obstacle_y
             ):
-                self.show_game_over()
+                self.live_count -= 1
+                self.player.pos = (50, 200)
+                self.live_count_label.text = f"Lives: {self.live_count}"
+                print('Live Left :',self.live_count)
+                if self.live_count == 0:
+                    self.show_game_over()
 
     def check_coin_collection(self):
         # Check if player collects a coin
@@ -213,7 +225,9 @@ class CrossingRoadGame(Widget):
         for coin in self.coins:
             self.remove_widget(coin)
         self.coins = []
-    
+        # Reset Live
+        self.live_count = 3
+        self.live_count_label.text = f"Lives: {self.live_count}"
         # Reset coin-related variables
         self.coin_count = 0
         self.coin_spawned = True
