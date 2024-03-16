@@ -83,6 +83,19 @@ class CrossingRoadGame(Widget):
                                       color=(1, 1, 1, 1))
         self.add_widget(self.live_count_label)
 
+        # Lower sound button
+        self.sound_level = 'max'
+        self.max_sound = 0
+        self.lower_sound_button = Button(size_hint=(None, None), size=(50, 50),
+                                         pos=(Window.width / 2 - 100, Window.height / 2 + 100),
+                                         background_normal='', background_down='',
+                                         opacity=1)
+        # Add image to the button
+        image_button = ''
+        self.lower_sound_button.add_widget(Image(source='path_to_your_image.png'))
+        self.lower_sound_button.bind(on_press=self.lower_sound)
+        self.add_widget(self.lower_sound_button)
+
         # Score Modal
         self.score_label = Label(text="Score: 0", font_size=20,
                                  pos=(8,-10),
@@ -115,6 +128,27 @@ class CrossingRoadGame(Widget):
 
     def schedule_obstacle_creation(self):
         Clock.schedule_interval(self.create_obstacle, OBSTACLE_INTERVAL)
+
+    def lower_sound(self, instance):
+        # Lower the background sound volume
+        if self.sound_level == 'max':
+            self.max_sound = self.background_sound.volume
+            self.background_sound.volume *= 0.5
+            self.sound_level = 'mid'
+            image_button = ''
+            print(self.sound_level)
+       
+        elif self.sound_level == 'mid':
+            self.background_sound.volume *= 0
+            self.sound_level = 'off'
+            image_button = ''
+            print(self.sound_level)
+        
+        elif self.sound_level == 'off':
+            self.background_sound.volume = self.max_sound
+            self.sound_level = 'max'
+            image_button = ''
+            print(self.sound_level)
 
     def create_obstacle(self, dt):
         car_images = ['Picture/car1.png', 'Picture/car2.png', 'Picture/car3.png']
