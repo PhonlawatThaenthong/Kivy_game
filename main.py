@@ -97,6 +97,14 @@ class CrossingRoadGame(Widget):
             obstacle.initial_y = obstacle.y
             self.add_widget(obstacle)
             self.obstacles.append(obstacle)
+            # Schedule for remove of the obstacle
+            Clock.schedule_once(lambda dt, obs=obstacle: self.remove_obstacle(obs),random.choice([5, 7, 10]))
+
+    def remove_obstacle(self, obstacle):
+        #remove obstacle when pass 5 or 7 or 10 second (random)
+        self.remove_widget(obstacle)
+        self.obstacles.remove(obstacle)
+        
 
     def create_coin(self, dt):
         # Only spawn when self.coin_spawned == True
