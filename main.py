@@ -186,7 +186,7 @@ class CrossingRoadGame(Widget):
     def create_coin(self, dt):
         # Only spawn when self.coin_spawned == True
         if self.coin_spawned:
-            coin = Image(source='', size=(30, 30))
+            coin = Image(source='Picture/coin.png', size=(30, 30))
             coin.x = Window.width * random.choice([0.90])#set x position of coin
             coin.y = 200  #set y position of coin
             self.add_widget(coin)
@@ -196,7 +196,7 @@ class CrossingRoadGame(Widget):
     def create_coin2(self, dt):
         # Only spawn when self.coin2_spawned == True
         if self.coin2_spawned:
-            coin = Image(source='', size=(30, 30))
+            coin = Image(source='Picture/coin.png', size=(30, 30))
             coin.x = Window.width * random.choice([0.1])#set x position of coin
             coin.y = 200  #set y position of coin
             self.add_widget(coin)
