@@ -15,11 +15,15 @@ from kivy.core.audio import SoundLoader
 import random
 
 # Constants
-OBSTACLE_SIZE = (50, 50)
+OBSTACLE_SIZE = (50, 50)  # Original obstacle size
+OBSTACLE_SIZE_LONG = (50, 100)  # Double size obstacle
 OBSTACLE_SPEED = 3
 OBSTACLE_INTERVAL = 1.5
 ASPECT_RATIO = 16 / 9  # Fixed aspect ratio
-
+MIN_COOLDOWN = 2  # Minimum cooldown for obstacle spawning (seconds)
+MAX_COOLDOWN = 6  # Maximum cooldown for obstacle spawning (seconds)
+LONG_OBSTACLE_COOLDOWN = 5  # Cooldown for spawning long obstacles (seconds)
+MAX_OBSTACLES = 9
 
 class CrossingRoadGame(Widget):
     def __init__(self, **kwargs):
@@ -30,9 +34,10 @@ class CrossingRoadGame(Widget):
         self.coin_count = 0
         self.live_count = 3
         self.best_scores = 0
-        Clock.schedule_interval(self.create_coin,1)
+        Clock.schedule_interval(self.create_coin, 1)
         self.coin_spawned = True
         self.coin2_spawned = False
+        
         # Calculate window size based on aspect ratio
         screen_width = Window.width
         screen_height = Window.height
@@ -41,7 +46,7 @@ class CrossingRoadGame(Widget):
         else:
             Window.size = (int(screen_width), int(screen_width / ASPECT_RATIO))
        
-        #backgrounf sound settings
+        # Background sound settings
         self.background_sound = SoundLoader.load('Sound/nbcground.mp3')
         self.getscore_sound = SoundLoader.load('Sound/scores.mp3')
         self.gethurt_sound = SoundLoader.load('Sound/nget_hurt.mp3')
@@ -52,7 +57,7 @@ class CrossingRoadGame(Widget):
 
         # Initialize obstacles and scheduling
         self.obstacles = []
-        Clock.schedule_interval(self.create_obstacle, OBSTACLE_INTERVAL)
+        self.schedule_obstacle_creation()
         Clock.schedule_interval(self.update, 1/60)
 
         # Initialize player movement
@@ -72,13 +77,13 @@ class CrossingRoadGame(Widget):
                                     background_normal='', background_down='',
                                     opacity=0, disabled=True)
         
-        #Live Modal
+        # Live Modal
         self.live_count_label = Label(text="Lives: 3", font_size=20,
                                       pos=(8,10),
                                       color=(1, 1, 1, 1))
         self.add_widget(self.live_count_label)
 
-        #Score Modal
+        # Score Modal
         self.score_label = Label(text="Score: 0", font_size=20,
                                  pos=(8,-10),
                                  color=(1, 1, 1, 1))
@@ -104,22 +109,42 @@ class CrossingRoadGame(Widget):
         self.keyboard.bind(on_key_down=self._on_key_down)
         self.keyboard.bind(on_key_up=self._on_key_up)
 
-    def create_obstacle(self, dt):
-        # Create three obstacles
-        for _ in range(3):
-            obstacle = Image(source='', size=OBSTACLE_SIZE)
-            obstacle.x = Window.width * random.choice([0.25, 0.44, 0.63])
-            obstacle.y = -OBSTACLE_SIZE[1]  # Start from the top of the window
-            obstacle.initial_y = obstacle.y
-            self.add_widget(obstacle)
-            self.obstacles.append(obstacle)
-            # Schedule for remove of the obstacle
-            Clock.schedule_once(lambda dt, obs=obstacle: self.remove_obstacle(obs),random.choice([5, 7, 10]))
+        # Initialize obstacle cooldown timer
+        self.obstacle_spawn_cooldown = 0
+        self.long_obstacle_cooldown = 0
 
-    def remove_obstacle(self, obstacle):
-        #remove obstacle when pass 5 or 7 or 10 second (random)
-        self.remove_widget(obstacle)
-        self.obstacles.remove(obstacle)
+    def schedule_obstacle_creation(self):
+        Clock.schedule_interval(self.create_obstacle, OBSTACLE_INTERVAL)
+
+    def create_obstacle(self, dt):
+        car_images = ['Picture/car1.png', 'Picture/car2.png', 'Picture/car3.png']
+        if self.obstacle_spawn_cooldown <= 0 and len(self.obstacles) < MAX_OBSTACLES:
+            self.obstacle_spawn_cooldown = random.uniform(MIN_COOLDOWN, MAX_COOLDOWN)
+
+            # Create three obstacles
+            for _ in range(3):
+                obstacle_size = random.choices([OBSTACLE_SIZE, OBSTACLE_SIZE_LONG], weights=[70, 30])[0]
+                obstacle_image = random.choice(car_images) if obstacle_size == OBSTACLE_SIZE else 'Picture/truck.png'
+
+                if obstacle_size == OBSTACLE_SIZE_LONG and self.long_obstacle_cooldown <= 0:
+                    self.long_obstacle_cooldown = LONG_OBSTACLE_COOLDOWN
+
+                obstacle = Image(source=obstacle_image, size=obstacle_size)
+                obstacle.x = Window.width * random.choice([0.25, 0.44, 0.63])
+                obstacle.y = -obstacle_size[1]  # Start from the top of the window
+
+                self.add_widget(obstacle)
+                self.obstacles.append(obstacle)
+
+                # Adjust the obstacle spawn cooldown based on its size
+                if obstacle_size == OBSTACLE_SIZE_LONG:
+                    self.obstacle_spawn_cooldown += 2  # Increase cooldown for long obstacles
+        else:
+            self.obstacle_spawn_cooldown -= dt
+
+
+
+
         
 
     def create_coin(self, dt):
