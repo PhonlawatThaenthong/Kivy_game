@@ -131,18 +131,27 @@ class CrossingRoadGame(Widget):
         if self.sound_level == 'max':
             self.max_sound = self.background_sound.volume
             self.background_sound.volume *= 0.5
+            self.restart_sound.volume *= 0.5
+            self.gethurt_sound.volume *= 0.5
+            self.getscore_sound.volume *= 0.5
             self.sound_level = 'mid'
             instance.background_normal = 'Picture/soundt22.png'
             print(self.sound_level)
        
         elif self.sound_level == 'mid':
             self.background_sound.volume *= 0
+            self.restart_sound.volume *= 0
+            self.gethurt_sound.volume *= 0
+            self.getscore_sound.volume *= 0
             self.sound_level = 'off'
             instance.background_normal = 'Picture/soundtofff.png'
             print(self.sound_level)
         
         elif self.sound_level == 'off':
             self.background_sound.volume = self.max_sound
+            self.restart_sound.volume = self.max_sound
+            self.gethurt_sound.volume = self.max_sound
+            self.getscore_sound.volume = self.max_sound
             self.sound_level = 'max'
             instance.background_normal = 'Picture/soundt11.png'
             print(self.sound_level)
