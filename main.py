@@ -42,10 +42,10 @@ class CrossingRoadGame(Widget):
             Window.size = (int(screen_width), int(screen_width / ASPECT_RATIO))
        
         #backgrounf sound settings
-        self.background_sound = SoundLoader.load('nbcground.mp3')
-        self.getscore_sound = SoundLoader.load('scores.mp3')
-        self.gethurt_sound = SoundLoader.load('nget_hurt.mp3')
-        self.restart_sound = SoundLoader.load('restart.mp3')
+        self.background_sound = SoundLoader.load('Sound/nbcground.mp3')
+        self.getscore_sound = SoundLoader.load('Sound/scores.mp3')
+        self.gethurt_sound = SoundLoader.load('Sound/nget_hurt.mp3')
+        self.restart_sound = SoundLoader.load('Sound/restart.mp3')
         if self.background_sound:
             self.background_sound.loop = True
             self.background_sound.play()
