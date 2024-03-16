@@ -177,10 +177,6 @@ class CrossingRoadGame(Widget):
             self.obstacle_spawn_cooldown -= dt
 
 
-
-
-        
-
     def create_coin(self, dt):
         # Only spawn when self.coin_spawned == True
         if self.coin_spawned:
