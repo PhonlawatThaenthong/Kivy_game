@@ -11,6 +11,7 @@ from kivy.core.window import Window
 from kivy.graphics import Line, Rectangle
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.core.audio import SoundLoader 
 import random
 
 # Constants
@@ -38,6 +39,15 @@ class CrossingRoadGame(Widget):
             Window.size = (int(screen_height * ASPECT_RATIO), int(screen_height))
         else:
             Window.size = (int(screen_width), int(screen_width / ASPECT_RATIO))
+       
+        #backgrounf sound settings
+        self.background_sound = SoundLoader.load('bcground.mp3')
+        self.getscore_sound = SoundLoader.load('scores.mp3')
+        self.gethurt_sound = SoundLoader.load('get_hurt.mp3')
+        self.restart_sound = SoundLoader.load('restart.mp3')
+        if self.background_sound:
+            self.background_sound.loop = True
+            self.background_sound.play()
 
         # Initialize obstacles and scheduling
         self.obstacles = []
@@ -177,6 +187,7 @@ class CrossingRoadGame(Widget):
                 and player_y + player_height > obstacle_y
             ):
                 self.live_count -= 1
+                self.gethurt_sound.play()
                 self.player.pos = (50, 200)
                 self.live_count_label.text = f"Lives: {self.live_count}"
                 print('Live Left :',self.live_count)
@@ -199,6 +210,7 @@ class CrossingRoadGame(Widget):
                 and player_y + player_height > coin_y
             ):
                 self.coin_count += 1  # counting coin
+                self.getscore_sound.play()
                 self.score_label.text = f"Score: {self.coin_count}"
                 print(f"Coins collected: {self.coin_count}")
                 self.coins.remove(coin)
@@ -219,6 +231,7 @@ class CrossingRoadGame(Widget):
         Clock.unschedule(self.create_obstacle)
         Clock.unschedule(self.update)
         Clock.unschedule(self.move_step)
+        self.background_sound.stop()
 
     def restart_game(self, instance):
         # Hide game over label and restart button
@@ -254,6 +267,8 @@ class CrossingRoadGame(Widget):
     
         # Reset player position
         self.player.pos = (50, 200)
+        self.restart_sound.play()
+        self.background_sound.play()
     
         # Reset obstacle positions
         for obstacle in self.obstacles:
