@@ -29,6 +29,7 @@ class CrossingRoadGame(Widget):
         self.coins = []
         self.coin_count = 0
         self.live_count = 3
+        self.last_scores = 0
         Clock.schedule_interval(self.create_coin,1)
         self.coin_spawned = True
         self.coin2_spawned = False
@@ -73,15 +74,20 @@ class CrossingRoadGame(Widget):
         
         #Live Modal
         self.live_count_label = Label(text="Lives: 3", font_size=20,
-                                      pos=(0,0),
+                                      pos=(8,10),
                                       color=(1, 1, 1, 1))
         self.add_widget(self.live_count_label)
 
         #Score Modal
         self.score_label = Label(text="Score: 0", font_size=20,
-                                 pos=(0,-20),
+                                 pos=(8,-10),
                                  color=(1, 1, 1, 1))
         self.add_widget(self.score_label)
+
+        self.last_scores_label = Label(text="Last Score: 0", font_size=20,
+                                 pos=(30,-30),
+                                 color=(1, 1, 1, 1))
+        self.add_widget(self.last_scores_label)
 
         self.restart_button.bind(on_press=self.restart_game)
         self.add_widget(self.restart_button)
@@ -257,8 +263,10 @@ class CrossingRoadGame(Widget):
         self.live_count = 3
         self.live_count_label.text = f"Lives: {self.live_count}"
         # Reset coin-related variables
+        self.last_scores = self.coin_count
         self.coin_count = 0
         self.score_label.text = f"Score: {self.coin_count}"
+        self.last_scores_label.text = f"Last Scores: {self.last_scores}"
         self.coin_spawned = True
         self.coin2_spawned = False
     
