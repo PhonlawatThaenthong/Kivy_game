@@ -311,7 +311,7 @@ class CrossingRoadGame(Widget):
                 else:
                     self.coin_spawned = True
                     Clock.schedule_once(self.create_coin, 1)
-                if self.coin_count % 10 == 0:
+                if self.coin_count % 5 == 0:
                     self.heart_spawned = True
                     Clock.schedule_once(self.create_heart, 1)
 
