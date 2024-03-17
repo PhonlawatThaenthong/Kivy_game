@@ -37,6 +37,7 @@ class CrossingRoadGame(Widget):
         Clock.schedule_interval(self.create_coin, 1)
         self.coin_spawned = True
         self.coin2_spawned = False
+        #Initialize heart
         self.heart = []
         self.heart_spawned = False
         
@@ -210,7 +211,7 @@ class CrossingRoadGame(Widget):
             self.coin2_spawned = False
 
     def create_heart(self, dt):
-        # Only spawn when self.coin_spawned == True
+        # Only spawn when self.coin_count % 5 == 0
         if self.heart_spawned:
             heart = Image(source='Picture/heart.png', size=(30, 30))
             heart.x = Window.width * random.choice([0.90])#set x position of coin
@@ -311,12 +312,13 @@ class CrossingRoadGame(Widget):
                 else:
                     self.coin_spawned = True
                     Clock.schedule_once(self.create_coin, 1)
+                #change heal spawn rate here
                 if self.coin_count % 5 == 0:
                     self.heart_spawned = True
                     Clock.schedule_once(self.create_heart, 1)
 
     def check_heart_collection(self):
-        # Check if player collects a coin
+        # Check if player collects a heart
         player_x, player_y = self.player.pos
         player_width, player_height = self.player.size
 
