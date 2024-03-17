@@ -37,6 +37,8 @@ class CrossingRoadGame(Widget):
         Clock.schedule_interval(self.create_coin, 1)
         self.coin_spawned = True
         self.coin2_spawned = False
+        self.heart = []
+        self.heart_spawned = False
         
         # Calculate window size based on aspect ratio
         screen_width = Window.width
@@ -203,6 +205,16 @@ class CrossingRoadGame(Widget):
             self.coins.append(coin)
             self.coin2_spawned = False
 
+    def create_heart(self, dt):
+        # Only spawn when self.coin_spawned == True
+        if self.heart_spawned:
+            heart = Image(source='Picture/heart.png', size=(30, 30))
+            heart.x = Window.width * random.choice([0.90])#set x position of coin
+            heart.y = 300  #set y position of coin
+            self.add_widget(heart)
+            self.heart.append(heart)
+            self.heart_spawned = False
+
     def create_borders(self):
         # Draw borders
         with self.canvas:
@@ -237,6 +249,7 @@ class CrossingRoadGame(Widget):
                 obstacle.initial_y = obstacle.y
         self.check_collision()
         self.check_coin_collection()
+        self.check_heart_collection()
 
     def check_collision(self):
         # Check collision between player and obstacles
@@ -294,6 +307,30 @@ class CrossingRoadGame(Widget):
                 else:
                     self.coin_spawned = True
                     Clock.schedule_once(self.create_coin, 1)
+                if self.coin_count % 10 == 0:
+                    self.heart_spawned = True
+                    Clock.schedule_once(self.create_heart, 1)
+
+    def check_heart_collection(self):
+        # Check if player collects a coin
+        player_x, player_y = self.player.pos
+        player_width, player_height = self.player.size
+
+        for heart in self.heart:
+            heart_x, heart_y = heart.pos
+            heart_width, heart_height = heart.size
+
+            if (
+                player_x < heart_x + heart_width
+                and player_x + player_width > heart_x
+                and player_y < heart_y + heart_height
+                and player_y + player_height > heart_y
+            ):
+                self.heart.remove(heart)
+                self.remove_widget(heart)
+                self.live_count += 1
+                self.heart_spawned = False
+                self.live_count_label.text = f"Lives: {self.live_count}"
 
 
     def show_game_over(self):
