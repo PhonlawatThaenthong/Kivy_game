@@ -288,7 +288,7 @@ class CrossingRoadGame(Widget):
                 print(f"Coins collected: {self.coin_count}")
                 self.coins.remove(coin)
                 self.remove_widget(coin)
-                if coin.source == '' and not self.coin2_spawned and self.coin_count%2 != 0:
+                if not self.coin2_spawned and self.coin_count%2 != 0:
                     self.coin2_spawned = True
                     Clock.schedule_once(self.create_coin2, 1)
                 else:
