@@ -68,18 +68,22 @@ class CrossingRoadGame(Widget):
         self.keysPressed = set()
         Clock.schedule_interval(self.move_step, 0)
 
-        # Initialize game over label and restart button
-        self.game_over_label = Label(text="Game Over", font_size=100,
+        # Initialize game over label and restart button and Score show
+        self.game_over_label = Label(text="Game Over", font_size=90,
                                      pos=(Window.width / 2 - 50, Window.height / 2),
                                      color=(1, 0, 0, 1), opacity=0)
         self.add_widget(self.game_over_label)
 
-        self.restart_button = Button(text="Restart", size=(200, 100),
-                                    pos=(Window.width / 2 - 100, Window.height / 2 - 100),
+        self.restart_button = Button(text="Restart", size=(200, 50),
+                                    pos=(Window.width / 2 - 100, 170),
                                     background_color=(0, 0.7, 0.3, 1),
                                     font_size=24, color=(1, 1, 1, 1),
                                     background_normal='', background_down='',
                                     opacity=0, disabled=True)
+        self.show_count_label = Label(text="Score = 0", font_size=60,
+                                      pos=(350,60),
+                                      color=(1, 1, 1, 1),opacity=0)
+        self.add_widget(self.show_count_label)
         
         # Live Modal
         self.live_count_label = Label(text="Lives: 3", font_size=20,
@@ -238,9 +242,8 @@ class CrossingRoadGame(Widget):
             # Draw starter border
             Line(points=[150, 0, 150, Window.height], width=border_width, color=border_color)
             # Draw obstacle border
-            Line(points=[300, 0, 300, Window.height], width=border_width, color=border_color)
-            Line(points=[450, 0, 450, Window.height], width=border_width, color=border_color)
-            Line(points=[600, 0, 600, Window.height], width=border_width, color=border_color)
+            
+            Line(points=[650, 0, 650, Window.height], width=border_width, color=border_color)
 
             # Draw right border
             Line(points=[Window.width, 0, Window.width, Window.height], width=border_width, color=border_color)
@@ -351,6 +354,8 @@ class CrossingRoadGame(Widget):
         # Show game over label and restart button
         self.game_over_label.opacity = 1
         self.restart_button.opacity = 1
+        self.show_count_label.text = f"Score = {self.coin_count}"
+        self.show_count_label.opacity = 1
         self.restart_button.disabled = False  # Enable restart button
         Clock.unschedule(self.create_obstacle)
         Clock.unschedule(self.update)
@@ -361,6 +366,7 @@ class CrossingRoadGame(Widget):
         # Hide game over label and restart button
         self.game_over_label.opacity = 0
         self.restart_button.opacity = 0
+        self.show_count_label.opacity = 0
         self.restart_button.disabled = True  # Disable restart button
 
         # Unscheduling old intervals
@@ -385,7 +391,7 @@ class CrossingRoadGame(Widget):
             self.best_scores = self.coin_count
         self.coin_count = 0
         self.score_label.text = f"Score: {self.coin_count}"
-        self.best_scores_label.text = f"Best Scores: {self.best_scores}"
+        self.best_scores_label.text = f"Best Score: {self.best_scores}"
         self.coin_spawned = True
         self.coin2_spawned = False
     
