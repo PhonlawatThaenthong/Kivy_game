@@ -115,7 +115,7 @@ class CrossingRoadGame(Widget):
         self.player_images = {
             'up': 'Picture/Idle.png',
             'down': 'Picture/Idle.png',
-            'left': 'Picture/BackWalk.png',
+            'left': 'Picture/Back.png',
             'right': 'Picture/Run.png'
         }
         self.player_source = self.player_images['up']
