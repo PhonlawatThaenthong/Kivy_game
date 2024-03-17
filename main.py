@@ -361,6 +361,9 @@ class CrossingRoadGame(Widget):
         Clock.unschedule(self.update)
         Clock.unschedule(self.move_step)
         self.background_sound.stop()
+        for obstacle in self.obstacles:
+            self.remove_widget(obstacle)
+        self.obstacles = []
 
     def restart_game(self, instance):
         # Hide game over label and restart button
@@ -383,6 +386,7 @@ class CrossingRoadGame(Widget):
         for coin in self.coins:
             self.remove_widget(coin)
         self.coins = []
+        
         # Reset Live
         self.live_count = 3
         self.live_count_label.text = f"Lives: {self.live_count}"
