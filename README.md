@@ -9,3 +9,64 @@
   โดยไม่ให้โดนรถชน
 - ถ้าเก็บเหรียญครบทุกๆ 5 เหรียญจะมี heal เกิดโดย
   ถ้าเก็บจะเพิ่มเลือด 1 หน่วย
+
+
+
+    def lower_sound(self, instance):
+
+
+    def create_obstacle(self, dt):
+
+
+
+    def create_coin(self, dt):
+
+
+    def create_coin2(self, dt):
+
+
+    def create_heart(self, dt):
+
+
+    def create_borders(self):
+
+
+    def update(self, dt):
+
+
+    def check_collision(self):
+
+
+    def check_coin_collection(self):
+
+
+    def check_heart_collection(self):
+
+
+
+    def show_game_over(self):
+
+
+    def restart_game(self, instance):
+
+    
+
+
+    def _on_keyboard_closed(self):
+
+
+    def _on_key_down(self, keyboard, keycode, text, modifiers):
+
+
+    def _on_key_up(self, keyboard, keycode):
+
+
+    def move_step(self, dt):
+
+
+class CrossingRoadApp(App):
+    def build(self):
+        return CrossingRoadGame()
+
+if __name__ == '__main__':
+    CrossingRoadApp().run()
