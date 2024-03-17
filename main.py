@@ -53,6 +53,7 @@ class CrossingRoadGame(Widget):
         self.getscore_sound = SoundLoader.load('Sound/scores.mp3')
         self.gethurt_sound = SoundLoader.load('Sound/nget_hurt.mp3')
         self.restart_sound = SoundLoader.load('Sound/restart.mp3')
+        self.heal_sound = SoundLoader.load('Sound/heal.mp3')
         if self.background_sound:
             self.background_sound.loop = True
             self.background_sound.play()
@@ -136,6 +137,7 @@ class CrossingRoadGame(Widget):
             self.restart_sound.volume *= 0.5
             self.gethurt_sound.volume *= 0.5
             self.getscore_sound.volume *= 0.5
+            self.heal_sound.volume *= 0.5
             self.sound_level = 'mid'
             instance.background_normal = 'Picture/soundmid.png'
             print(self.sound_level)
@@ -145,6 +147,7 @@ class CrossingRoadGame(Widget):
             self.restart_sound.volume *= 0
             self.gethurt_sound.volume *= 0
             self.getscore_sound.volume *= 0
+            self.heal_sound.volume *= 0
             self.sound_level = 'off'
             instance.background_normal = 'Picture/soundoff.png'
             print(self.sound_level)
@@ -154,6 +157,7 @@ class CrossingRoadGame(Widget):
             self.restart_sound.volume = self.max_sound
             self.gethurt_sound.volume = self.max_sound
             self.getscore_sound.volume = self.max_sound
+            self.heal_sound.volume = self.max_sound
             self.sound_level = 'max'
             instance.background_normal = 'Picture/soundmax.png'
             print(self.sound_level)
@@ -326,6 +330,7 @@ class CrossingRoadGame(Widget):
                 and player_y < heart_y + heart_height
                 and player_y + player_height > heart_y
             ):
+                self.heal_sound.play()
                 self.heart.remove(heart)
                 self.remove_widget(heart)
                 self.live_count += 1
