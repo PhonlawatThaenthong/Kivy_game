@@ -86,9 +86,9 @@ class CrossingRoadGame(Widget):
         # Lower sound button
         self.sound_level = 'max'
         self.max_sound = 0
-        self.lower_sound_button = Button(size=(50, 50),
+        self.lower_sound_button = Button(size=(10, 10),
                                          pos=(740,400),
-                                         background_normal='Picture/soundt11.png',
+                                         background_normal='Picture/soundmax.png',
                                          opacity=1)      
         self.lower_sound_button.bind(on_press=self.lower_sound)
         self.add_widget(self.lower_sound_button)
@@ -135,7 +135,7 @@ class CrossingRoadGame(Widget):
             self.gethurt_sound.volume *= 0.5
             self.getscore_sound.volume *= 0.5
             self.sound_level = 'mid'
-            instance.background_normal = 'Picture/soundt22.png'
+            instance.background_normal = 'Picture/soundmid.png'
             print(self.sound_level)
        
         elif self.sound_level == 'mid':
@@ -144,7 +144,7 @@ class CrossingRoadGame(Widget):
             self.gethurt_sound.volume *= 0
             self.getscore_sound.volume *= 0
             self.sound_level = 'off'
-            instance.background_normal = 'Picture/soundtofff.png'
+            instance.background_normal = 'Picture/soundoff.png'
             print(self.sound_level)
         
         elif self.sound_level == 'off':
@@ -153,7 +153,7 @@ class CrossingRoadGame(Widget):
             self.gethurt_sound.volume = self.max_sound
             self.getscore_sound.volume = self.max_sound
             self.sound_level = 'max'
-            instance.background_normal = 'Picture/soundt11.png'
+            instance.background_normal = 'Picture/soundmax.png'
             print(self.sound_level)
 
     def create_obstacle(self, dt):
