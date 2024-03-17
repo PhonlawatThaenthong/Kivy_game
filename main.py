@@ -112,8 +112,15 @@ class CrossingRoadGame(Widget):
         self.add_widget(self.restart_button)
 
         # Initialize player rectangle
+        self.player_images = {
+            'up': '',
+            'down': '',
+            'left': 'Picture/coin.png',
+            'right': 'Picture/heart.png'
+        }
+        self.player_source = self.player_images['up']
         with self.canvas:
-            self.player = Rectangle(source="", pos=(50,200), size=(50, 50))
+            self.player = Rectangle(source=self.player_source, pos=(50,200), size=(50, 50))
 
         # Create borders
         self.create_borders()
@@ -430,21 +437,29 @@ class CrossingRoadGame(Widget):
         # Move player based on pressed keys
         currentx, currenty = self.player.pos
         step_size = 200 * dt
+        direction = None
 
         if 'up' in self.keysPressed:
             currenty += step_size  # Move up when 'up' or 'w' is pressed
+            direction = 'up'
         if 'down' in self.keysPressed:
             currenty -= step_size  # Move down when 'down' or 's' is pressed
+            direction = 'down'
         if 'left' in self.keysPressed:
             currentx -= step_size  # Move left when 'left' or 'a' is pressed
+            direction = 'left'
         if 'right' in self.keysPressed:
             currentx += step_size  # Move right when 'right' or 'd' is pressed
+            direction = 'right'
 
         # Limit player movement within window boundaries
         currentx = max(0, min(currentx, Window.width - self.player.size[0]))
         currenty = max(0, min(currenty, Window.height - self.player.size[1]))
 
         self.player.pos = (currentx, currenty)
+        if direction:
+            self.player_source = self.player_images[direction]
+            self.player.source = self.player_source
 
 class CrossingRoadApp(App):
     def build(self):
