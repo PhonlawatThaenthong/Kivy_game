@@ -113,14 +113,14 @@ class CrossingRoadGame(Widget):
 
         # Initialize player rectangle
         self.player_images = {
-            'up': '',
-            'down': '',
-            'left': 'Picture/coin.png',
-            'right': 'Picture/heart.png'
+            'up': 'Picture/Idle.png',
+            'down': 'Picture/Idle.png',
+            'left': 'Picture/BackWalk.png',
+            'right': 'Picture/Run.png'
         }
         self.player_source = self.player_images['up']
         with self.canvas:
-            self.player = Rectangle(source=self.player_source, pos=(50,200), size=(50, 50))
+            self.player = Rectangle(source=self.player_source, pos=(50,200), size=(70, 70))
 
         # Create borders
         self.create_borders()
