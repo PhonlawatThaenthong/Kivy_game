@@ -63,10 +63,3 @@
 
     def move_step(self, dt):
 
-
-class CrossingRoadApp(App):
-    def build(self):
-        return CrossingRoadGame()
-
-if __name__ == '__main__':
-    CrossingRoadApp().run()
