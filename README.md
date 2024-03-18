@@ -30,6 +30,9 @@
     def create_heart(self, dt):
     - สร้างหัวใจที่ช่องมุมขวาสุดของจอ
 
+    def create_bomb(self, dt):
+    - สร้างระเบิดที่ช่องมุมขวาสุดของจอ
+
     def create_borders(self):
     - สร้างช่องแบ่งต่างของแต่ละ column และขอบจอ
 
@@ -50,6 +53,10 @@
     def check_heart_collection(self):
     - ใช้ตรวจสอบว่า player มาชนหัวใจหรือไม่
       ถ้าชนเลือดของ player จะได้เพิ่มขึ้น 1 หน่วย
+
+    def check_heart_collection(self):
+    - ใช้ตรวจสอบว่า player มาชนระเบิดหรือไม่
+      ถ้าชนรถจะหายไประยะเวลาหนึ่ง
 
     def show_game_over(self):
     - ถ้ามีการเรียกใช้ function นี้จะแสดงข้อความ Game Over ขึ้นมา
