@@ -23,7 +23,7 @@ ASPECT_RATIO = 16 / 9  # Fixed aspect ratio
 MIN_COOLDOWN = 2  # Minimum cooldown for obstacle spawning (seconds)
 MAX_COOLDOWN = 6  # Maximum cooldown for obstacle spawning (seconds)
 LONG_OBSTACLE_COOLDOWN = 5  # Cooldown for spawning long obstacles (seconds)
-MAX_OBSTACLES = 9
+MAX_OBSTACLES = 90
 
 class CrossingRoadGame(Widget):
     def __init__(self, **kwargs):
