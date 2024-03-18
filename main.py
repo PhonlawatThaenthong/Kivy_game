@@ -301,12 +301,7 @@ class CrossingRoadGame(Widget):
             ):
                 #make live can not lower than 0
                 self.player.pos = (50, 200)
-                if self.live_count == 3:
-                    self.live_count = 2
-                elif self.live_count == 2:
-                    self.live_count = 1
-                elif self.live_count == 1:
-                    self.live_count = 0
+                self.live_count -= 1
                 self.gethurt_sound.play()
                 self.live_count_label.text = f"Lives: {self.live_count}"
                 print('Live Left :',self.live_count)
