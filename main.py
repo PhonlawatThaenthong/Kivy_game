@@ -33,6 +33,8 @@ class CrossingRoadGame(Widget):
         self.coins = []
         self.coin_count = 0
         self.live_count = 3
+        self.bomb = []
+        self.bomb_spawned = False
         self.best_scores = 0
         Clock.schedule_interval(self.create_coin, 1)
         self.coin_spawned = True
@@ -55,6 +57,8 @@ class CrossingRoadGame(Widget):
         self.gethurt_sound = SoundLoader.load('Sound/nget_hurt.mp3')
         self.restart_sound = SoundLoader.load('Sound/restart.mp3')
         self.heal_sound = SoundLoader.load('Sound/heal.mp3')
+        self.bomb_sound = SoundLoader.load('Sound/bomb.mp3')
+
         if self.background_sound:
             self.background_sound.loop = True
             self.background_sound.play()
@@ -150,6 +154,7 @@ class CrossingRoadGame(Widget):
             self.gethurt_sound.volume *= 0.5
             self.getscore_sound.volume *= 0.5
             self.heal_sound.volume *= 0.5
+            self.bomb_sound.volume *= 0.5
             self.sound_level = 'mid'
             instance.background_normal = 'Picture/soundmid.png'
             print(self.sound_level)
@@ -160,6 +165,7 @@ class CrossingRoadGame(Widget):
             self.gethurt_sound.volume *= 0
             self.getscore_sound.volume *= 0
             self.heal_sound.volume *= 0
+            self.bomb_sound.volume *= 0
             self.sound_level = 'off'
             instance.background_normal = 'Picture/soundoff.png'
             print(self.sound_level)
@@ -170,6 +176,7 @@ class CrossingRoadGame(Widget):
             self.gethurt_sound.volume = self.max_sound
             self.getscore_sound.volume = self.max_sound
             self.heal_sound.volume = self.max_sound
+            self.bomb_sound.volume = self.max_sound
             self.sound_level = 'max'
             instance.background_normal = 'Picture/soundmax.png'
             print(self.sound_level)
@@ -230,6 +237,16 @@ class CrossingRoadGame(Widget):
             self.add_widget(heart)
             self.heart.append(heart)
             self.heart_spawned = False
+    
+    def create_bomb(self, dt):
+        # Only spawn when self.coin_count % 5 == 0
+        if self.bomb_spawned:
+            bomb = Image(source='Picture/bomb.png', size=(20, 20))
+            bomb.x = Window.width * random.choice([0.90])#set x position of coin
+            bomb.y = 250  #set y position of coin
+            self.add_widget(bomb)
+            self.bomb.append(bomb)
+            self.bomb_spawned = False
 
     def create_borders(self):
         # Draw borders
@@ -265,6 +282,7 @@ class CrossingRoadGame(Widget):
         self.check_collision()
         self.check_coin_collection()
         self.check_heart_collection()
+        self.check_bomb_collection()
 
     def check_collision(self):
         # Check collision between player and obstacles
@@ -326,6 +344,9 @@ class CrossingRoadGame(Widget):
                 if self.coin_count % 5 == 0:
                     self.heart_spawned = True
                     Clock.schedule_once(self.create_heart, 1)
+                if self.coin_count % 10 == 0:
+                    self.bomb_spawned = True
+                    Clock.schedule_once(self.create_bomb, 1)
 
     def check_heart_collection(self):
         # Check if player collects a heart
@@ -348,6 +369,30 @@ class CrossingRoadGame(Widget):
                 self.live_count += 1
                 self.heart_spawned = False
                 self.live_count_label.text = f"Lives: {self.live_count}"
+
+    def check_bomb_collection(self):
+        # Check if player collects a heart
+        player_x, player_y = self.player.pos
+        player_width, player_height = self.player.size
+
+        for bomb in self.bomb:
+            bomb_x, bomb_y = bomb.pos
+            bomb_width, bomb_height = bomb.size
+
+            if (
+                player_x < bomb_x + bomb_width
+                and player_x + player_width > bomb_x
+                and player_y < bomb_y + bomb_height
+                and player_y + player_height > bomb_y
+            ):
+                self.bomb_sound.play()
+                for obstacle in self.obstacles:
+                    self.remove_widget(obstacle)
+                self.obstacles = []
+                self.bomb.remove(bomb)
+                self.remove_widget(bomb)
+                self.bomb_spawned = False
+
 
 
     def show_game_over(self):
@@ -386,6 +431,12 @@ class CrossingRoadGame(Widget):
         for coin in self.coins:
             self.remove_widget(coin)
         self.coins = []
+        for heart in self.heart:
+            self.remove_widget(heart)
+        self.heart = []
+        for bomb in self.bomb:
+            self.remove_widget(bomb)
+        self.bomb = []
         
         # Reset Live
         self.live_count = 3
